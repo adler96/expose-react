@@ -1,26 +1,38 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 import './App.css'
+
+const initialState = { count: 0 };
+
+
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'increment': 
+    return { count: state.count + 1 };
+    case 'decrement': 
+    return { count: state.count - 1 };
+    case 'reset': 
+    return { count: 0 };
+    case 'set': 
+    return { count: action.payload };
+    default:
+      return state;
+  }
+}
+
 
 function App() {
 
-  const [ count, setCount ] = useState(0);
-
-  const increment = () => setCount(prevCount => prevCount + 1);
-  const decrement = () => setCount(prevCount => prevCount - 1);
-
-  const reset = () => setCount(0);
-  const setValue = (value) => setCount(value);
-
+  const [ state, dispatch ] = useReducer(reducer, initialState);
 
   return (
     <div>
-      <p>Count: {count}</p>
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
       
-      <button onClick={reset}>Reset</button>
+      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
 
-      <button onClick={() => setValue(10)}>Set to 10</button>
+      <button onClick={() => dispatch({ type: 'set', payload: 10 })}>Set to 10</button>
     </div>
   )
 }
